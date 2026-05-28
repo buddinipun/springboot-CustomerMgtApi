@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <!-- Log Directory -->
+    <property name="LOG_PATH" value="logs"/>
+
+    <!-- Console Pattern -->
+    <property name="CONSOLE_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
+
+    <!-- File Pattern -->
+    <property name="FILE_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
+
+    <!-- ============================= -->
+    <!-- Console Appender -->
+    <!-- ============================= -->
+    <appender name="CONSOLE"
+              class="ch.qos.logback.core.ConsoleAppender">
+
+        <encoder>
+            <pattern>${CONSOLE_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- ============================= -->
+    <!-- Rolling File Appender -->
+    <!-- ============================= -->
+    <appender name="FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>${LOG_PATH}/CustomerApp.log</file>
+
+        <encoder>
+            <pattern>${FILE_PATTERN}</pattern>
+        </encoder>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+
+            <!-- Daily archive -->
+            <fileNamePattern>
+                ${LOG_PATH}/archived/CustomerApp-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+
+            <!-- Max file size -->
+            <maxFileSize>10MB</maxFileSize>
+
+            <!-- Keep 30 days -->
+            <maxHistory>30</maxHistory>
+
+            <!-- Total size -->
+            <totalSizeCap>1GB</totalSizeCap>
+
+        </rollingPolicy>
+    </appender>
+
+    <!-- ============================= -->
+    <!-- Error File Appender -->
+    <!-- ============================= -->
+    <appender name="ERROR_FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>${LOG_PATH}/error.log</file>
+
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+
+        <encoder>
+            <pattern>${FILE_PATTERN}</pattern>
+        </encoder>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+
+            <fileNamePattern>
+                ${LOG_PATH}/archived/error-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+
+            <maxFileSize>10MB</maxFileSize>
+
+            <maxHistory>30</maxHistory>
+
+        </rollingPolicy>
+    </appender>
+
+    <!-- ============================= -->
+    <!-- Application Logger -->
+    <!-- ============================= -->
+    <logger name="com.hit.api"
+            level="DEBUG"
+            additivity="false">
+
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
+
+    </logger>
+
+    <!-- ============================= -->
+    <!-- Root Logger -->
+    <!-- ============================= -->
+    <root level="INFO">
+
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
+
+    </root>
+
+</configuration>
